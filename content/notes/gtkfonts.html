@@ -1,0 +1,25 @@
+{% extends "_post.html" %}
+{%hyde
+    title: Fixing large fonts in GTK applications
+    created: 2003-06-22
+%}
+{% block article %}
+
+Information on how to fix the problem of large fonts being used for GTK+ applications within KDE by making applications use Bitstream Vera fonts.
+
+I find it annoying that there are so many issues with font configuration within linux. Today I fixed the problem of large fonts being used for GTK+ applications within KDE. I am using the <a href="http://www.gnome.org/fonts/" title="Bitstream Vera">Bitstream Vera fonts</a> from <a href="http://www.gnome.org" title="Gnome">Gnome</a> as my default font in KDE. The fix involved creating and editing both my <code>~/.gtkrc</code> and <code>~/.gtkrc-2.0</code> files.
+
+.gtkrc looks as follows:
+<pre><code>style "user-font" {
+font="-bitstream-bitstream vera sans-medium-r-normal-*-*-80-*-*-p-*-iso8859-15"
+}
+widget_class "*" style "user-font"
+</code></pre>
+And .gtkrc-2.0:
+<pre><code>style "user-font" {
+    font_name = "Bitstream Vera Sans 8"
+}
+widget_class "*" style "user-font"
+</code></pre>
+All applications should now be using Bitstream Vera Sans 8 for menus etc.
+{% endblock %}

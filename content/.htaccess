@@ -1,0 +1,12 @@
+RewriteEngine on
+RewriteBase /
+
+{% hyde_listing_page_rewrite_rules %}
+
+# listing pages whose names are the same as their enclosing folder's
+RewriteCond %{REQUEST_FILENAME}/$1.html -f 
+RewriteRule ^([^/]*)/$ %{REQUEST_FILENAME}/$1.html
+
+# regular pages
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^.*$ %{REQUEST_FILENAME}.html

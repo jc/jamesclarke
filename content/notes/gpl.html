@@ -1,0 +1,25 @@
+{% extends "_post.html" %}
+{%hyde
+    title: Thoughts on the GPL
+    created: 2003-11-06
+%}
+{% block article %}
+
+Just some random thoughts while reading through <a href="http://www.amazon.co.uk/exec/obidos/ASIN/1882114981/ref=sr_aps_books_1_1/026-6174908-2918802">Free Software, Free Society</a>. Covering the GPL with web-services and unofficial distribution of GPL software.
+
+<h3>Web-services and the GPL</h3>
+How does the <a href="http://www.gnu.org/licenses/licenses.html#TOCGPL">GNU General Public License</a> (GPL) apply to an application that runs as a web-service?
+
+Here the program running the web-service may never be released to the public and thus never distributed. The source code would never have to be released even though depended on GPL'd libraries or code. This is because the users of the system are not downloading the software, they are merely interacting with it via an API.
+
+This allows companies or people to develop web-services using libraries that are available under the GPL without ever having to release the source code for their web-service software.
+
+<h3>The Solution?</h3>
+After a bit of research it looks like this has been thought of before. The <a href="http://www.affero.org/oagpl.html">Affero General Public License</a> (AGPL) is basically a modified version of the GPL that includes the use of software over a computer network. Also from their <a href="http://www.affero.org/oagf.html">FAQ</a> it suggests that the next version of the GPL (version 3) will include this provision.
+
+This still raises a few questions, when the GPLv3 is released, what will happen to software released under the GPLv2? Will all the current software that is licensed under GPLv2 be available under GPLv2 and GPLv3? As I understand you cannot revoke a GPL license, therefore people will still be able to develop web-services that depend on versions of libraries that have been released under GPLv2, even though the latest versions are now under GPLv3.
+
+<h3>The GPL and Unofficial Distribution</h3>
+How does the GPL deal with an unofficial release of software? If I create a piece of software that depends on some GPL code or library, therefore binding my software to the GPL. What happens if someone illegally obtains my software and distributes it? Is it possible to force the recall of the software and all code, or am I stuck with it now being 'out in the wild' for anyone to use or modify and redistribute?
+
+{% endblock %}

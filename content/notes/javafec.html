@@ -1,0 +1,32 @@
+{% extends "_post.html" %}
+{%hyde
+    title: Java FEC Example
+    created: 2003-10-27
+    disqus: True
+    disqus_ident: "18 http://jamesclarke.info/daily/notes/javafec/"
+%}
+{% block article %}
+
+I've written an example on using the Java FEC Library by Onion Networks. This had been on my TODO list for quite awhile, since I had trouble using the library during development of <a href="/projects/mSync">MSync</a>.
+
+When I was doing work on my multicast rsync application, <a href="/projects/msync">MSync</a>, I was having trouble understanding and using the <a href="http://onionnetworks.com/developers/index.php">Java FEC Library</a> from Onion Networks. I gather that other people may be suffering from the lack of examples available on the Internet, so I've created one.
+
+<h3>Code</h3>
+
+My Java FEC example is commented and demonstrates how to encode a byte array and decode it again from a subset of the encoded data. It should be quite simple to adapt the code to encode a file and transmit it over UDP.
+
+Please note I am in no way affiliated with Onion Networks, nor had any part in writing the Java FEC library. If you are interested in how forward error correction works you should read <a href="http://citeseer.nj.nec.com/rizzo97effective.html">Effective erasure codes for reliable computer communication protocols</a> by Luigi Rizzo.
+
+<h3>Running</h3>
+
+Place all the jars from the Java FEC Library and <code>fec.properties</code> into <code>lib/</code>.  The properties file tells the library to use pure codes rather than native codes.
+
+<pre><code>$ export FEC_CP=.:lib/concurrent-jaxed.jar:lib/log4j.jar:lib/onion-common.jar:lib/onion-fec.jar
+$ javac -classpath $FEC_CP JavaFecExample.java
+$ java -classpath $FEC_CP JavaFecExample
+Source and Received Files are equal!
+</code></pre>
+
+The code is avialble at <a href="http://github.com/jc/javafec-example">javafec-example on GitHub</a>.
+
+{% endblock %}

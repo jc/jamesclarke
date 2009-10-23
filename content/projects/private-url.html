@@ -1,0 +1,36 @@
+{% extends "_post.html" %}
+{%hyde
+    title: Private URL WordPress Plugin
+    created: 2007-12-18
+    disqus: True
+    disqus_ident: "226 http://jamesclarke.info/projects/private-url/"
+%}
+{% block article %}
+
+<a href="http://wordpress.org/extend/plugins/private-url/" title="Private URL">Private URL</a> is a <a href="http://wordpress.org">WordPress</a> plugin for sharing private posts through a special private url which is accessible without requiring readers to register or enter a password.  Private URLs have a structure similar to <code>/private/293/df8eb1583b052b59e2cafc4327214d0/</code>.
+
+<h3>Installation</h3>
+
+<ol>
+<li><a href="http://wordpress.org/extend/plugins/private-url/" title="Private URL">Download</a> the plugin from the WordPress Plugin Directory.</li>
+<li>Upload <code>private-url.php</code> to your <code>wp-content/plugins</code> directory.</li>
+<li>Activate the plugin through the <em>Plugins</em> menu in WordPress.</li>
+<li>Configure the plugin in the <em>Private URL</em> menu under <em>Settings</em> in WordPress.</li>
+<li>Create and save a private post.  A new options panel called <em>Private URL</em> will show the private url for the post.
+</li></ol>
+
+<img src="/media/images/private-url-post-admin.jpg" alt="Private URL options panel" title="Private URL options panel" />
+
+<h3>Usage</h3>
+
+When you edit a private post a new options panel will become available called <em>Private URL</em>.  This provides the private url and a means for changing the <em>salt</em> for the post.  The url is a publicly accessible version of the private post and typically of the form: <code>/private/293/df8eb1583b052b59e2cafc4327214d0/</code>
+
+<h4>What is the <em>salt</em>?</h4>
+
+The salt is responsible to generating the private url for each post.  It is similar to a passphrase.  By default all posts use the salt provided in the settings page for Private URL.  However, you can specify a post specific salt using the Private URL options panel while editing a post.
+
+Modifying the salt for a post will cause it to have a new private url and the post's old private url will no longer function.  This can be used as a means to <em>expire</em> an old private url for the post.  Changing the default salt in the options menu will cause all posts without their own salt to have new private urls.
+
+{% endblock %}
+
+

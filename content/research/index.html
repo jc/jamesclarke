@@ -1,0 +1,82 @@
+{% extends "_post.html" %}
+{%hyde
+    title: Research
+    front: True
+%}
+
+{% block article %}
+{% excerpt %}
+{%endexcerpt%}
+
+I am a post-doctoral researcher in the [Cognitive Computation Group][cogcomp] at
+[The University of Illinois at Urbana-Champaign][illinois].  You can find my
+[contact details][contact] on the [front page][contact].
+
+[cogcomp]: http://l2r.cs.uiuc.edu/~cogcomp/
+[illinois]: http://www.illinois.edu
+[contact]: /
+
+My research interests lie in the field of natural language processing. I am
+currently interested in leveraging context expressed through a world model to
+help natural language interpretation and understanding. My other interests are
+in using integer linear programming and other methods to create more global
+models for natural language processing problems.  This is closely related to my
+PhD research in which I focused on developing methods to process, extract and
+summarise information from large natural text collections.  In particular I
+formalised the compression task within an integer linear programming framework
+which allowed new and existing models to be supplemented with linguistic
+constraints.
+
+### Interact
+
+We are currently in the process of creating a resource for people interested in
+[Integer Linear Programming for Natural Language Processing][ilpwiki].
+
+I co-organised the [Workshop on Integer Linear Programming for Natural Language
+Processing][ilpws] hosted at [NAACL HLT 2009][naacl2009]. More information can
+be found on the [ILP for NLP wiki][ilpwiki].
+
+You can help our community by participating in our [Language Experiments][lexp].
+
+[ilpwiki]: http://ilpnlp.wikidot.com
+[ilpws]: http://www-tsujii.is.s.u-tokyo.ac.jp/ilpnlp/
+[naacl2009]: http://www.naaclhlt2009.org/
+[lexp]: http://www.language-experiments.org
+
+## Publications
+
+### PhD Thesis
+{% for list_page in node.walk_pages %}
+{% ifequal list_page.papertype "thesis" %}
+{% include "_paper_listing.html" %}
+{% endifequal %}
+{% endfor %}
+
+### Journal Papers
+{% for list_page in node.walk_pages %}
+{% ifequal list_page.papertype "journal" %}
+{% include "_paper_listing.html" %}
+{% endifequal %}
+{% endfor %}
+
+### Conference Papers
+{% for list_page in node.walk_pages %}
+{% ifequal list_page.papertype "conference" %}
+{% include "_paper_listing.html" %}
+{% endifequal %}
+{% endfor %}
+
+The [resources page][resources] contains the compression corpora I used in my compression experiments.
+
+[resources]: /research/resources
+
+### People
+Other people you should really be paying attention to:
+
+* [Sebastian Riedel][s]
+* [Abhishek Arun][a]
+
+[s]: http://sebrie.freehostia.com/cms/
+[a]: http://homepages.inf.ed.ac.uk/s0343799/
+
+{% endblock %}

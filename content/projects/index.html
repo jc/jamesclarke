@@ -1,0 +1,19 @@
+{% extends "_body.html" %}
+{%hyde
+    title: Projects
+    front: True
+%}
+{% block content %}
+<div class="contents post">
+<p>Projects are a little spread out but here are some links.</p>
+<ul>
+<li><a href="http://github.com/jc">My GitHub</a></li>
+{% for post in  page.node.walk_pages %}
+{% if not post.listing and not post.skip_listing %}
+<li><a href="{{ post.url }}" rel="bookmark" title="Permanent Link to {{ post.title}}">{{ post.title }}</a></li>
+{% endif %}
+{% endfor %}
+<li><a href="http://code.google.com/p/flickrpy/">flickr.py</a></li>
+</ul>
+</div>
+{% endblock %}

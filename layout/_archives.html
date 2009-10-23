@@ -1,0 +1,24 @@
+<div class="contents">
+{% if not page.front %}
+<h2>Archives</h2>
+{% endif %}
+<table id="arc">
+<tbody>
+{% for post in posts %}
+{% if post.display_in_list %}
+{% if not page.front %}
+{% ifchanged post.created|date:"Y" %}
+<tr class=year><th colspan=2>{{ post.created|date:"Y"}}</th></tr>
+{% endifchanged %}
+{% endif %}
+{% ifchanged post.created|date:"F" %}
+<tr><th>{{ post.created|date:"F" }}</th><td></td></tr>
+{% endifchanged %}
+<tr><th>{{ post.created|date:"j" }}</th><td><a href="{{ post.url }}" rel="bookmark" title="Permanent Link to {{ post.title}}">{{ post.title }}</a></td></tr>
+{% endif %}
+{% endfor %}
+{% if page.front %}
+<tr><th><a title="list of all posts" href="{{ page.node.url }}/archives">...</a></th><td></td></tr>
+{% endif %}
+</tbody></table>
+</div>

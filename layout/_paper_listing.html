@@ -1,0 +1,23 @@
+{% extends "_root.html" %}
+{% block all %}
+{% load jctags %}
+{% newlineless %}
+{{ list_page.authors }}. {{ list_page.year }}. <a href="{{ list_page.url }}">{{ list_page.title }}</a>.
+{% ifnotequal list_page.papertype "thesis" %}
+ In _{{ list_page.booktitle }}_
+{% else %}
+ {{ list_page.booktitle }}
+{% endifnotequal%}
+{% if list_page.shortbooktitle %}
+ ({{ list_page.shortbooktitle }})
+{% endif %}
+{% if list_page.volume %}, vol. {{ list_page.volume }}{% endif %}
+{% if list_page.pages %}, pages {{ list_page.pages|safe }}{% endif %}
+{% if list_page.publisher %}, {{ list_page.publisher }}{% endif %}
+.
+{% if list_page.location %} {{ list_page.location }}.{% endif %}
+<br/>
+<a href="{{ list_page.url }}">Full Details</a> <strong>&nbsp;&infin;&nbsp;</strong> <a href="{{ list_page.paperurl }}">pdf</a> {% if list_page.additional %}  <strong>&nbsp;&infin;&nbsp;</strong> **{{ list_page.additional }}**{% endif %}
+{% endnewlineless %}
+
+{% endblock %}

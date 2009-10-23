@@ -1,0 +1,115 @@
+{% extends "_post.html" %}
+{%hyde
+    title: Installing libxml2, libxslt and the Python bindings on OS X
+    created: 2004-07-18
+    disqus: True
+    disqus_ident: "12 http://jamesclarke.info/daily/notes/libxml2/"
+%}
+{% block article %}
+
+
+<blockquote class="alert">
+WARNING: Do <strong>not</strong> follow these instructions on Leopard (10.5).  See the notes at the bottom of the page.
+</blockquote>
+
+A quick guide to installing <a href="http://xmlsoft.org/" title="libxml2">libxml2</a> and <a href="http://xmlsoft.org/XSLT/" title="libxslt">libxslt</a> on Mac OS X with Python bindings.
+
+Installing <a href="http://xmlsoft.org/" title="libxml2">libxml2</a> and <a href="http://xmlsoft.org/XSLT/" title="libxslt">libxslt</a> on Mac OS X can be a real pain.  The information is out there but is spread across many mailing list archives and blogs.  These are some of my notes from my experience of installing and using libxml2.
+
+### Obtaining the sources
+
+Download the latest sources from one of the sites listed on the <a href="http://xmlsoft.org/downloads.html" title="xmlsoft downloads">xmlsoft download page</a>, for example the <a href="http://xmlsoft.org/sources/" title="xmlsoft http server">xmlsoft server</a>.  The files you want are the latest <code>libxml2-2.2.X.tar.gz</code> and <code>libxslt-1.1.X.tar.gz</code>.
+
+These should be automatically uncompressed to new directories but if not:
+
+    $ tar xvzf libxml2-2.2.X.tar.gz
+    $ tar xvzf libslt-1.1.X.tar.gz
+
+### Installing libxml2
+
+    $ ./configure --with-python=/System/Library/Frameworks/Python.framework/Versions/2.3/
+    $ make
+    $ sudo make install
+
+This will install libxml2 to <code>/usr/local</code>.
+
+### Installing libxslt
+By default configure will build against the default libxml included with OS X.  And will typically give the error:
+
+    checking for libxml libraries >= 2.6.8... configure: error:
+    Version 2.6.7 found. You need at least libxml2 2.6.8 for this
+    version of libxslt
+
+This can be corrected by telling configure to use the libxml2 use the new libxml2.
+
+     $ ./configure 
+        --with-python=/System/Library/Frameworks/Python.framework/Versions/2.3/ 
+        --prefix=/usr/local 
+        --with-libxml-prefix=/usr/local 
+        --with-libxml-include-prefix=/usr/local/include 
+        --with-libxml-libs-prefix=/usr/local/lib
+     $ make
+     $ sudo make install
+
+libxslt will be installed to <code>/usr/local</code>.
+
+### Removing the default libxml2
+The original version of libxml2 that comes with OS X is located in <code>/usr/lib</code>.  Python appears to get confused and uses the wrong libxml2 libraries if you don't remove the original libxml2.
+
+Typically I would get errors such as:
+
+     *** malloc[16996]: Deallocation of a pointer not malloced:
+     0x18a1800; This could be a double free(), or free() called with
+     the middle of an allocated block; Try setting environment variable
+     MallocHelp to see tools to help debug
+     Segmentation fault
+
+In my python scripts when performing big transforms.  Running the transform using <code>xsltproc</code> worked fine.  Using <code>pyxsltproc.py</code>, located in the <code>python/tests</code> of the libxslt source gave <code>Bus Error</code>.
+
+To fix this I had to remove the original libxml2.  Just to be safe I renamed them:
+
+     $ cd /usr/lib
+     $ sudo mv libxml2.2.dylib libxml2.2.dylib.old
+     $ sudo mv libxml2.dylib libxml2.dylib.old
+     $ sudo mv libxml2.la libxml2.la.old
+
+You can confirm what version of libxml is being used by using <code>gdb</code>.  Showing two versions of libxml2 loaded:
+
+     $ gdb python
+     (gdb) run pyxsltproc.py transform.xsl file.xml
+     Starting program: /usr/bin/python pyxsltproc.py transform.xsl file.xml
+     ...
+     (gdb) info share
+     ...
+     14 libxml2.2.dylib       - 0x94a30000        dyld Y Y /usr/lib/libxml2.2.dylib at 0x94a30000 (offset 0x0)
+     ...
+     29 libxml2.2.dylib       - 0x1008000         dyld Y Y /usr/local/lib/libxml2.2.dylib at 0x1008000 (offset 0x1008000)
+     (gdb)
+
+### References
+
+<ul>
+	<li><a href="http://www.xmldatabases.org/WK/blog/659_Installing_libxml2_with_Python_on_Panther.item" title="Inspirational Technology">Inspirational Technology</a></li>
+	<li><a href="http://mail.gnome.org/archives/xslt/2004-April/msg00002.html">Re: [xslt] problems with libxslt and python on Mac OS X</a></li>
+	<li><a href="http://mail.gnome.org/archives/xslt/2004-March/msg00069.html">[xslt] problems with libxslt and python on Mac OS X</a></li>
+</ul>
+
+### Reader Update
+
+I've received a few emails since I wrote this which may be of help to others.
+
+David Hess and Katja Süss have the following advice on installing the Python bindings alone:
+<blockquote>
+<p>I found an alternate method for getting libxml2 working in Mac OS X's native python:</p>
+<ol><li>Download the appropriate source code for libxml2 based on the version listed in <code>/usr/lib/xml2Conf.sh</code> In my case this was 2.6.16 (Tiger).</li>
+<li>Extract the source code and cd to the python sub-directory of the source tree.</li>
+<li> Execute <code>python setup.py install</code></li>
+</ol>
+</blockquote>
+
+Kevin Watters has a worrying report about renaming the dylibs on Leopard:
+> In your notes about libxml2 you mention that it might be useful to rename the dylibs in <code>/usr/lib</code>
+> 
+> Just wanted to let you know that this broke my Leopard!  Lots of apps fail, since C Foundation.Framework is dependent on libxml2, apparently.  I had to boot into single user mode to fix it :)
+
+{% endblock %}

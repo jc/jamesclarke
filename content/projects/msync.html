@@ -1,0 +1,32 @@
+{% extends "_post.html" %}
+{%hyde
+    title: "MSync: A Multicast rsync"
+    created: 2004-07-26
+%}
+{% block article %}
+
+MSync is a multicast synchronisation tool that works in a similar way to rsync. This is an overview of the system.
+
+<h3>Overview</h3>
+
+MSync is a multicast synchronisation tool that works in a similar way to <a href="http://samba.anu.edu.au/rsync">rsync</a>.  It was researched, designed and implemented as my dissertation project for my undergraduate degree at <a href="http://www.ex.ac.uk">The University of Exeter</a> in 2002/3.
+
+The MSync design provides the following functionality:
+<ul>
+	<li>Reliable one-to-many file distribution over a multicast link.</li>
+	<li>Transmission of only the differences between files, provided that an old version of the file exists on the client system.</li>
+	<li>Allows for situations when clients have different versions of the file. Updates still occur and data transfer remains efficient.</li>
+</ul>
+
+The design does not provide:
+<ul>
+	<li>Congestion control.  Thus is only suitable if all machines have an adequately fast connection (LAN).</li>
+	<li>Security. It is be presumed that the network is secure.</li>
+	<li>Compatibility with rsync. It only uses the rsync algorithm, it does not use rsync's protocol.</li>
+</ul>
+
+An implementation has been created however it is definitely not in a releasable state.
+
+I have provided a <a href="/projects/msyncdesign">design document</a> for MSync that outlines how the rsync algorithm is used and reliable multicasting is achieved. Hopefully someone will find it useful or thought provoking.
+
+{% endblock %}

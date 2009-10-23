@@ -1,0 +1,37 @@
+{% extends "_post.html" %}
+{% block article %}
+{% load jctags %}
+{% newlineless %}
+{{ page.authors }}. {{ page.year }}. <a href="{{ page.paperurl }}">{{ page.title }}</a>.
+{% ifnotequal page.papertype "thesis" %}
+ In _{{ page.booktitle }}_
+{% else %}
+ {{ page.booktitle }}
+{% endifnotequal%}
+{% if page.shortbooktitle %}
+ ({{ page.shortbooktitle }})
+{% endif %}
+{% if page.volume %}, vol. {{ page.volume }}{% endif %}
+{% if page.pages %}, pages {{ page.pages|safe }}{% endif %}
+{% if page.publisher %}, {{ page.publisher }}{% endif %}
+.
+{% if page.location %} {{ page.location }}.{% endif %}
+{% endnewlineless %}
+
+{% if page.additional %}**{{ page.additional }}**{% endif %}
+
+{% block detail %}{% endblock %}
+
+{% if page.abstract %}
+### Abstract
+
+{{ page.abstract|safe }}
+
+{% endif %}
+
+{% if page.bibtex %}
+### Bibtex
+
+<blockquote><pre><code>{{ page.bibtex }}</code></pre></blockquote>
+{% endif %}
+{% endblock %}

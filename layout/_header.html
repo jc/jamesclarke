@@ -1,0 +1,17 @@
+<div class="header">
+{% load jctags %}
+{% newlineless %}
+  <h1>
+{% ifnotequal page.module site.module %}
+<a href="/{{site.url}}">{{site.name}}</a>&nbsp;&amp;&nbsp;
+{% if page.front %}
+{{ page.node.module.name|capfirst }}
+{% else %}
+<a href="{{ page.node.module.url }}">{{ page.node.module.name|capfirst }}</a>
+{% endif %}
+{% else %}
+{{site.name}}
+{% endifnotequal %}
+</h1>
+{% endnewlineless %}
+</div>

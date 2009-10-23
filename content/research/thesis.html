@@ -1,0 +1,67 @@
+{% extends "_paper.html" %}
+{%hyde
+   papertype: thesis
+   title: "Global Inference for Sentence Compression: An Integer Linear Programming Approach"
+   created: 2008-02-01 00:00:00
+   authors: James Clarke
+   year: 2008
+   booktitle: PhD Thesis
+   publisher: University of Edinburgh
+   paperurl: /media/papers/jclarke-thesis.pdf
+   abstract: |
+
+    > In this thesis we develop models for sentence compression.  This
+    > text rewriting task has recently attracted a lot of attention due to
+    > its relevance for applications (e.g., summarisation) and simple
+    > formulation by means of word deletion.  Previous models for sentence
+    > compression have been inherently local and thus fail to capture the
+    > long range dependencies and complex interactions involved in text
+    > rewriting.  We present a solution by framing the task as an
+    > optimisation problem with local and global constraints and recast
+    > existing compression models into this framework.  Using the
+    > constraints we instill syntactic, semantic and discourse knowledge
+    > the models otherwise fail to capture.  We show that the addition of
+    > constraints allow relatively simple local models to reach
+    > state-of-the-art performance for sentence compression.
+    > 
+    > The thesis provides a detailed study of sentence compression and its
+    > models.  The differences between automatic and manually created
+    > compression corpora are assessed along with how compression varies
+    > across written and spoken text.  We also discuss various techniques
+    > for automatically and manually evaluating compression output against
+    > a gold standard.  Models are reviewed based on their assumptions,
+    > training requirements, and scalability.
+    > 
+    > We introduce a general method for extending previous approaches to
+    > allow for more global models.  This is achieved through the
+    > optimisation framework of Integer Linear Programming (ILP). We
+    > reformulate three compression models: an unsupervised model, a
+    > semi-supervised model and a fully supervised model as ILP problems
+    > and augment them with constraints.  These constraints are intuitive
+    > for the compression task and are both syntactically and semantically
+    > motivated.  We demonstrate how they improve compression quality and
+    > reduce the requirements on training material.
+    > 
+    > Finally, we delve into document compression where the task is to
+    > compress every sentence of a document and use the resulting summary
+    > as a replacement for the original document.  For document-based
+    > compression we investigate discourse information and its application
+    > to the compression task. Two discourse theories, Centering and
+    > lexical chains, are used to automatically annotate documents.  These
+    > annotations are then used in our compression framework to impose
+    > additional constraints on the resulting document.  The goal is to
+    > preserve the discourse structure of the original document and most
+    > of its content.  We show how a discourse informed compression model
+    > can outperform a discourse agnostic state-of-the-art model using a
+    > question answering evaluation paradigm.
+%}
+
+{% block detail %}
+*Supervisor:* [Mirella Lapata][mlap]<br/>
+*Committee:* [Dan Roth][danr] (external), [Steve Renals][srenals] and [Jon Oberlander][jon].
+
+[mlap]: http://homepages.inf.ed.ac.uk/mlap/
+[danr]: http://l2r.cs.uiuc.edu/
+[srenals]: http://homepages.inf.ed.ac.uk/srenals/
+[jon]: http://homepages.inf.ed.ac.uk/jon/
+{% endblock %}

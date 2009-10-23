@@ -1,0 +1,12 @@
+{% extends "_body.html" %}
+{%hyde
+    title: Archives
+%}
+
+{% block content %}
+
+{% with page.node.walk_pages as posts %}
+{% include "_archives.html" %}
+{% endwith %}
+
+{% endblock %}

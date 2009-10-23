@@ -1,0 +1,41 @@
+{% extends "_post.html" %}
+{% hyde
+title: Generating EPS files from JPEGs
+created: 2003-02-18 18:40:28
+%}
+{% block article %}
+How to create Encapsulated Postscript (eps) files from jpeg (.jpg) images and include them within a <a href="http://www.latex.com" title="LaTeX">LaTeX</a> document.
+
+<a href="http://www.pdflib.com/products/more/jpeg2ps.html" title="jpeg2ps">jpeg2ps</a> is a nice little utility that converts jpegs to eps files (surprisingly enough). This is very handy for people on Windows platforms that need to create Encapsulated Postscript (eps) files with
+bounding boxes from jpeg images. The generated eps file can be inserted into <a href="http://www.latex.com" title="LaTeX">LaTeX</a> documents easily.
+
+The utility is easy to use:
+<pre><code>$ jpeg2ps sample.jpg &gt; sample.eps
+</code></pre>
+is all that is required to convert the jpeg.
+
+To place the resulting eps into a LaTeX document:
+
+<pre><code>begin{figure}[hbp]
+    begin{center}
+        includegraphics[width=0.5textwidth]{sample}
+        caption{This is some image}
+    end{center}
+end{figure}
+</code></pre>
+
+This, of course, relies on the graphicx package being loaded. This is
+done in the preamble using:
+
+<pre><code>usepackage[dvips]{graphicx}
+</code></pre>
+Using jpeg2ps was the best method I found for inserting images/figures/graphics into LaTeX documents under Windows. Using other methods, such as epstool, generated bounding box errors when compiling the LaTeX document.
+
+<h3>Update 2003-11-18</h3>
+
+Since switching to Mac OS X I have been using the unix version of jpeg2ps. It compiles fine under OS X. Simply download the unix version and do:
+
+<pre><code>$ make
+$ sudo make install
+</code></pre>
+{% endblock %}

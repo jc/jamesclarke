@@ -1,0 +1,22 @@
+{% extends "_body.html" %}
+{%hyde
+    title: Notes
+    front: True
+%}
+
+{% block content %}
+{% recent_posts recents 14 node %}
+
+{% for post in recents|slice:":7" %}
+{% with post as page %}
+{% include "_preview.html" %}
+{% endwith %}
+{% endfor %}
+
+{% with recents|slice:"7:" as posts %}
+{% if posts %}
+{% endif %}
+{% include "_archives.html" %}
+{% endwith %}
+
+{% endblock %}

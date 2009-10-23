@@ -1,0 +1,111 @@
+{% extends "_post.html" %}
+{%hyde
+    title: "The Design of MSync"
+    created: 2004-07-26
+    display_in_list: False
+    skip_listing: True
+%}
+{% block article %}
+
+This document outlines the design of MSync, particularly how the rsync algorithm is used and reliable multicasting is achieved.
+
+<h3>Introduction</h3>
+
+Traditionally a file transfer takes place over a one-to-one (unicast) basis, where one machine acts as the master with the source file. However, nowadays there is a growing need for one-to-many file transfer.  There are many environments that require this kind of transfer, for example, rolling out a software package to many client machine in a class room environment.  Using traditional one-to-one file transfer each client must create a separate connection to the master and have the contents transferred.  This is costly in both bandwidth and time.
+
+The waste of bandwidth and time is even greater when a relatively small update is made to the master file.  Here the entire contents of the file is typically transfered to each client despite the file may only have small modifications.
+
+<a href="http://samba.anu.edu.au/rsync">rsync</a> is a program that allows us to only transfer the differences between the master file and client file.  However this is still performed over a unicast connection (typically <a href="http://en.wikipedia.org/wiki/Transmission_Control_Protocol">TCP</a> or <a href="http://en.wikipedia.org/wiki/User_datagram_protocol">UDP</a>).
+
+<a href="http://www.faqs.org/rfcs/rfc3170.html">IP multicast</a> is a bandwidth-conserving technology that allows data to be sent over a single data stream and be received by multiple clients.  This technology is built into the routers and switches, when an multicast packet arrives the router/switch duplicates the data and sends it on to the appropriate subnet.  Thus optimising the bandwidth and time used.  One of the drawbacks of multicast is that it does not
+provide a reliable transfer, thus reliability must be built into the application layer.
+
+These two technologies can be combined to provide reliable one-to-many synchronisation tool.  This document outlines the design of such a tool.
+
+<h3>Problems with the rsync algorithm</h3>
+
+The <a href="http://samba.anu.edu.au/rsync/tech_report/node2.html">rsync algorithm</a> is used by rsync to determine the differences between the master's and client's file and how best to communicate these differences.
+
+Briefly the rsync algorithm works as follows:
+<ol>
+	<li>The client sends a set of checksum pairs (a strong and weak hash) to the server.  The checksum pairs are generated from breaking its file into fixed-size non-overlapping blocks.</li>
+	<li>The server then compares the client's hashes against the hashes of its file at every fix-sized block.</li>
+	<li>It can then work out the differences between the two files and transmit the missing data and instructions for building the resulting file.</li>
+</ol>
+(For a more detailed description read the <a href="http://samba.anu.edu.au/rsync/tech_report/node2.html">rsync algorithm</a> page).
+
+Imagine there is a reliable multicast link between the server and two clients <em>A</em> and <em>B</em>.  Each client can send its checksum pairs to the server.  If the file on <em>A</em> and <em>B</em> are identical then the server can perform the rsync algorithm as normal.  However, if the files differ slightly between <em>A</em> and <em>B</em> (and of course the server), the server cannot simply follow the rsync algorithm as <em>A</em> and <em>B</em> require a different set of instructions and blocks.
+<h3>Modifying the rsync algorithm for multicast</h3>
+In the rsync algorithm the server decides which data blocks needed to be sent.  This meant that it could send data blocks of any length to the client to fill in the "gaps" in its file.  The server, also, keeps track of the receiver's file state.  This is problematic over multicast as it does not generalise well for multiple clients with multiple versions of the file.
+
+To overcome this problem, in MSync, the roles of server and client(s) can be reversed.  The server will send out non-overlapping fixed-sized checksum pairs to the clients.  The clients then calculate a rolling checksum for ever fixed-size block in their file to determine which blocks they require from the server.  Clients can then request the blocks required and once received use the server checksum pairs to
+rebuild the file.
+
+This can be described more formally, with a server containing source file <em>A</em> and a client containing an old copy <em>B</em>:
+
+<ol>
+	<li>The server splits the file <em>A</em> into a series of non-overlapping fixed-sized blocks of size <em>S</em> bytes.  The last block may be shorter than <em>S</em> bytes.</li>
+	<li>For each of these blocks the server calculates two checksums: a weak "rolling" 32-bit checksum and a strong 128-bit (MD4, MD5 etc) checksum.</li>
+	<li>The server sends these checksums to the client (or the group of clients via multicast).</li>
+	<li>The client(s) searches through <em>B</em> to find all blocks of length<em> S</em> bytes (at any offset, not just multiples of <em>S</em>) that have the same weak and strong checksum as one of the blocks of <em>A</em>.  This can be done quickly in a single pass using a special property of the rolling checksum.</li>
+	<li>The client(s) then requests a sequence of data blocks from the server.  These are the data blocks that are present in file <em>A</em> but not in file <em>B</em>.</li>
+	<li>The server sends the client(s) the data blocks that correspond to those requested.</li>
+	<li>The client(s) now constructs a copy of <em>A</em> using the received data blocks and unchanged blocks occurring in file <em>B</em>.</li>
+</ol>
+
+This method means that only one set of checksum pairs is ever sent, this is desirable when using multicast.  It also means that the <em>gaps</em> in the client file are all of fixed-size, thus clients will require the same data blocks even if their files are slightly different to one another.  This has the advantage that in the worst case all the contents of file <em>A</em> will be transferred.  Whereas using the rsync algorithm in its original form but over multicast could lead to more data than the size of file <em>A</em> being transferred.
+
+<h3>Reliable multicast</h3>
+
+Applications that use multicast tend to be so varied that there is no single general-purpose reliable multicast protocol.  The reliable multicast protocol must be designed to fit in with the application.<a href="http://www.faqs.org/rfcs/rfc2887.html"> RFC 2887</a> outlines a variety of approaches to achieve reliable multicasting.
+
+In TCP the client uses acknowledgement (ACK) packets to confirm receipt of data.  This leads to a verbose transfer which is undesirable when using multicast.  Another way to add reliability is to use negative acknowledgement (NACK) packets to indicate when it is suspected that data is missing.  This is less verbose than using ACKs but can generate high retransmission rates when the receiver group
+grows.
+
+Forward Error Correction (FEC) is a well-established technique for preventing data corruption.  The basic principle behind FEC is sending redundant packets that can be used to reconstruct dropped packets. For example, if we send three packets plus an packet containing the XOR of them, if we receive two packets plus the XOR we can generate the missing packet.  This cuts down on the amount of retransmission of
+packets.
+
+MSync uses a hybrid FEC+NACK system to ensure reliable multicast.  The FEC uses an (<em>n</em>, <em>k</em>) erasure code to ensure enough redundancy can be built into the packets.
+
+The (<em>n</em>, <em>k</em>) erasure code takes <em>k</em> packets of source data and encodes them to produce <em>n</em> packets of encoded data; this process occurs at the sender.  The data is encoded in such a way that any subset of <em>k</em>-encoded packets allows the reconstruction, by decoding, of the source data.  This allows the receiver to recover from up to<em> n</em>-<em>k</em> losses in a group of <em>n</em> encoded packets.  The <a href="http://citeseer.nj.nec.com/rizzo97effective.html">Vandermonde erasure code</a> is one implementation of the (<em>n</em>, <em>k</em>) erasure code.
+
+NACKs are used to request retransmission of encoded groups that could not be decoded.  Also instead of having every client request corrupt/missing groups (through NACKs) a technique called NACK suppression is used to reduce the chance of flooding the server with NACKs.
+
+Clients that employ NACK suppression monitor NACKs sent by other clients and do not send a NACK if they have seen one recently for the same piece of data.  This is achieved using random timers and a NACK register.  The NACK register stores all the NACKs received.  When the client wishes to send a NACK a random timer is set.  When the timer expires the NACK is sent, unless the NACK is present in the register.
+
+There is a chance that the NACK packet will never arrive at the server and thus retransmission will never occur.  To protect against this, the server sends out end of transfer (EOT) packets when it believes the transfer is complete.  When a client receives a EOT packet, it resets its NACK register and queues up NACKs for every FEC group it has been unable to decode.  It then starts the send process, again using random timers and the now clean register.  If the client does not require any more data it can rebuild the file on receipt of an EOT packet.
+
+For redundancy the server should send multiple EOTs before assuming the transfer has been successful.  If a NACK is received the EOT count should be reset.
+<h3>Combining everything</h3>
+A modified rsync algorithm and reliable multicast protocol have been outlined so far.  These can be combined to form an application protocol.  For example the NACKs can also be used to request the data blocks from the server, this will also benefit from NACK suppression.
+
+The protocol is outlined from both the server and client perspective.
+
+Server:
+
+<ol>
+	<li>Generate the checksum pairs for the given file.  This is done by splitting the file into a series of non-overlapping fixed-size blocks and generating a weak "rolling" checksum and a strong 128-bit checksum.</li>
+	<li>The checksum pairs are then grouped into fixed-size groups (for example, groups of 32 checksum pairs).  Each group is then encoded using forward error correct and sent to the multicast group.</li>
+	<li>The server now enters a "Waiting for NACKs" state.  If no NACKs are received for a fixed period of time (eg 5 seconds) then an EOT is sent.  If enough (typically 5-10) EOT packets are sent with no reply then the server assumes a successful transfers and terminates.  However if a NACK is received, the EOT count is reset and the NACK is handled.</li>
+	<li>Once a NACK for data or retransmission is received the server enters a "Sending Data" state.  While in this state the server continually sends encoded data while NACKs arrive.  The requested data blocks should be placed into groups of fixed-size to form a FEC group to be encoded.  The final group may be smaller than the fixed-size.</li>
+	<li>Once all NACKs have been processed and replied to, the server enters the "Waiting for NACKs" state again (Step 3).</li>
+	<li>The server terminates once the EOT count is reached.</li>
+</ol>
+Client:
+
+<ol>
+	<li>The client starts in an "Idle" state.  In this state, the client waits for encoded checksum pairs to be received.  If the client receives an EOT packet, it will NACK for any FEC groups it cannot decode.</li>
+	<li>When all the checksum pairs are received, the client then enters the "Searching File" state, in which it spends time comparing the received checksum pairs to the checksums of its own copy of the file.  If an EOT packet arrives, the client sends a NACK representing more time.  Other NACKs can be received in this state; these NACKs are added to the NACK Register to help perform NACK suppression.</li>
+	<li>Once the client finishes comparing the received checksum pairs with its own file, it then sends NACKs for the data blocks it requires, and then enters the "Waiting for Data" state.  In this state, the client listens for more NACKs, which it registers, and listens for the data it requires.  Upon receiving an EOT packet,
+it either rebuilds the file to the given length, or sends more NACKs for the data it still requires or requests a encoded data group be resent.</li>
+	<li>Once the file has been rebuilt, the client then enters the "Idle" state again.</li>
+	<li>If a set amount of time passes without any data being received, the client terminates.  The client can exit with an error if the timeout occurs while it is still expecting data (in the "Waiting for Data" state).</li>
+</ol>
+
+<h3>Conclusions</h3>
+
+This document has outlined the design of MSync -- a multicast file synchronisation tool that is comparable to rsync.  It has shown how the rsync algorithm must be modified to handle multicast and has proposed a hybrid FEC+NACK reliable multicast protocol.  These have been combined to produce a final high-level application protocol.
+
+An implementation based on this work does exist and has been created in Java using <a href="http://jarsync.sourceforge.net/">jarsync</a> and <a href="http://onionnetworks.com/developers/index.php">Onion Networks FEC Library</a> however it is not available for download as the code is very rough and was implemented for proof of concept rather than deployment.
+
+{% endblock %}
