@@ -72,7 +72,7 @@ h4 {
     text-align:center;
     margin: 30px auto 30px 20px;
     background: #fff;
-    padding: 0 25px 0 25px;
+    padding: 0 25px 1em 25px;
     width: 600px;
 }
 
@@ -152,6 +152,7 @@ h4 {
 
 .photo img, .photo a img {
     border: 2px solid #000;
+    margin-bottom: 18px;
 }
 
 .postnoline {
