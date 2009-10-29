@@ -21,10 +21,11 @@ Redirect permanent /static/flickr.py http://jamesclarke.info/projects/flickr
 Redirect permanent /projects/msync/design http://jamesclarke.info/projects/msyncdesign
 Redirect permanent /static/JavaFecExample.java /projects/javafec
 Redirect permanent /projects/flickr /projects
-Redirect permanent /weblog /notes
 
 RewriteEngine on
 RewriteBase /
+
+RewriteRule ^weblog /notes [R]
 
 {% hyde_listing_page_rewrite_rules %}
 
