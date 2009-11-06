@@ -1,6 +1,5 @@
 {% extends "_root.html" %}
 {% block all %}
-{% load jctags %}
 {% newlineless %}
 {{ list_page.authors }}. {{ list_page.year }}. <a href="{{ list_page.url }}">{{ list_page.title }}</a>.
 {% ifnotequal list_page.papertype "thesis" %}
