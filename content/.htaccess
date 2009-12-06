@@ -23,9 +23,8 @@ Redirect permanent /static/JavaFecExample.java /projects/javafec
 Redirect permanent /projects/flickr /projects
 
 RewriteEngine on
-RewriteCond %{HTTP_HOST} ^www\.jamesclarke\.net$ [NC]
-RewriteCond %{HTTP_HOST} ^www\.jamesclarke\.info$ [NC]
-RewriteCond %{HTTP_HOST} ^jamesclarke\.info$ [NC]
+RewriteCond %{HTTP_HOST} !^jamesclarke\.net [NC]
+RewriteCond %{HTTP_HOST}   !^$          
 RewriteRule ^(.*)$ http://jamesclarke.net/$1 [R=301,NE]
 
 
