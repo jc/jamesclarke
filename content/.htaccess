@@ -21,6 +21,10 @@ Redirect permanent /static/flickr.py http://jamesclarke.info/projects/flickr
 Redirect permanent /projects/msync/design http://jamesclarke.info/projects/msyncdesign
 Redirect permanent /static/JavaFecExample.java /projects/javafec
 Redirect permanent /projects/flickr /projects
+Redirect permanent /static/jclarke-thesis.pdf http://jamesclarke.net/media/papers/jclarke-thesis.pdf
+Redirect permanent /static/clarke-lapata-emnlp07.pdf /media/papers/clarke-lapata-emnlp07.pdf
+
+
 
 RewriteEngine on
 RewriteCond %{HTTP_HOST} !^jamesclarke\.net [NC]
