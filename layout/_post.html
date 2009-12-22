@@ -5,7 +5,7 @@
 {% markdown %}
 {% if not page.front %}
 ## {{ page.title }}
-<p class="byline">{{ post.date|date:"j F Y"}}</p>
+<p class="byline">{{ page.created|date:"j F Y"}}</p>
 {% endif %}
 {% article %}
 {% block article %}
