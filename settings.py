@@ -12,7 +12,7 @@ BACKUPS_DIR = os.path.join(ROOT_PATH, 'backups')
 
 BACKUP = False
 
-SITE_WWW_URL = "http://jamesclarke.info"
+SITE_WWW_URL = "http://jamesclarke.net"
 SITE_NAME = "James Clarke"
 SITE_AUTHOR = "James Clarke"
 SITE_ROOT = "/"
