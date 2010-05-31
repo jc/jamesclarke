@@ -4,21 +4,6 @@
 {% block title %} {{site.name}} {% endblock %}
 
 {% block content_body %}
-<div id="flickr" class="flickr">
-<script type="text/javascript">
-//<![CDATA[
-function jsonFlickrFeed(doc) {
-  lst = doc.items;
-  c = document.getElementById('flickr');
-  for (var i=0, post; i < 8; i++) {
-    post = lst[i];
-    c.innerHTML += '<a href="' + post.link + '"><img src="' + post.media.m.replace("_m", "_s") + '" title="' + post.title + '"/></a>';
-  }
-}
-//]]>
-</script>
-<script type="text/javascript" src="http://api.flickr.com/services/feeds/photos_public.gne?id=35237094740@N01&amp;format=json" defer="defer" async="async"></script>
-</div>
 
 {% filter typogrify %}
 <div class="contents post">
@@ -37,7 +22,21 @@ function jsonFlickrFeed(doc) {
 </ul>
 <span class="fn" style="display: none">James Clarke</span> <span style="display: none">(<a class="url" rel="me" href="http://jamesclarke.net">www</a>).</span>
 </div>
-
+<div id="flickr" class="flickr">
+<script type="text/javascript">
+//<![CDATA[
+function jsonFlickrFeed(doc) {
+  lst = doc.items;
+  c = document.getElementById('flickr');
+  for (var i=0, post; i < 8; i++) {
+    post = lst[i];
+    c.innerHTML += '<a href="' + post.link + '"><img src="' + post.media.m.replace("_m", "_s") + '" title="' + post.title + '"/></a>';
+  }
+}
+//]]>
+</script>
+<script type="text/javascript" src="http://api.flickr.com/services/feeds/photos_public.gne?id=35237094740@N01&amp;format=json" defer="defer" async="async"></script>
+</div>
 <p style="text-align:right"><a href="http://www.openrightsgroup.org/support-org" title="Support ORG"><img src="http://www.openrightsgroup.org/badges/org_protect_150.gif" width="150" height="36" alt="Support the Open Rights Group" class="noline" /></a></p>
 </div>
 {% endfilter %}
