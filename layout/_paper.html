@@ -19,6 +19,7 @@
 
 {% if page.additional %}**{{ page.additional }}**{% endif %}
 
+{% if page.slidesurl %} <a href="{{ page.slidesurl }}">Download talk slides</a>. {% endif %}
 {% block detail %}{% endblock %}
 
 {% if page.abstract %}

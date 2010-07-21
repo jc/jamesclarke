@@ -16,7 +16,7 @@
 .
 {% if list_page.location %} {{ list_page.location }}.{% endif %}
 <br/>
-<a href="{{ list_page.url }}">Full Details</a> <strong>&nbsp;&infin;&nbsp;</strong> <a href="{{ list_page.paperurl }}">pdf</a> {% if list_page.additional %}  <strong>&nbsp;&infin;&nbsp;</strong> **{{ list_page.additional }}**{% endif %}
+<a href="{{ list_page.url }}">Full Details</a> <strong>&nbsp;&infin;&nbsp;</strong> <a href="{{ list_page.paperurl }}">pdf</a>{% if list_page.slidesurl %} <strong>&nbsp;&infin;&nbsp;</strong> <a href="{{ list_page.slidesurl }}">slides</a> {% endif %}{% if list_page.additional %}  <strong>&nbsp;&infin;&nbsp;</strong> **{{ list_page.additional }}**{% endif %}
 {% endnewlineless %}
 
 {% endblock %}
