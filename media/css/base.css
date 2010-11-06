@@ -105,7 +105,7 @@ h4 {
 .flickr {
     text-align:center;
     padding: 11px 0;
-    width:600px;
+    width:640px;
 }
 
 .flickr a {
@@ -138,7 +138,7 @@ h4 {
 .post {
     padding:18px 0 0 0;
     text-align:left;
-    width:600px;
+    width:640px;
 }
 
 .photo {
@@ -158,13 +158,13 @@ h4 {
 .postnoline {
 	padding:18px 0 0 0;
 	text-align:left;
-    width:600px;
+    width:640px;
 }
 
 .postcomment {
     padding:18px 0 0 0;
     text-align:left;
-    width:600px;
+    width:640px;
     font-size:14px;
     color:#666;
 }
