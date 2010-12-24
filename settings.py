@@ -42,6 +42,8 @@ LISTING_PAGE_NAMES = ['index', 'archives']
 # clean urls are enabled.
 APPEND_SLASH = False
 
+MD_EXTENSIONS = ['footnotes']
+
 # {folder : extension : (processors)}
 # The processors are run in the given order and are chained.
 # Only a lone * is supported as an indicator for folders. Path 
