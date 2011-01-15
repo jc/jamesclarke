@@ -24,10 +24,12 @@ p, ul, ol {
 
 blockquote { 
     margin: 0 18px 18px 18px;
-    color:#666;
+    color:#900;
     padding-left:10px;
     border-left:1px solid #ccc;
 }
+
+q { color: #900; }
 
 pre { margin: 0 18px 18px 18px;}
 
