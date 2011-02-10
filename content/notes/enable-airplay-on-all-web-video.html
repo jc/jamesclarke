@@ -1,0 +1,57 @@
+{% extends "_post.html" %}
+{% hyde
+title: Bookmarklet to enable AirPlay on all web videos
+created: 2011-02-10 08:00:21
+%}
+{% block article %}
+
+Apple, in iOS 4.3, introduced the ability to stream embedded web videos over AirPlay. [Mac OS Rumors][mor] has a good overview of the feature. The main limitation is that websites must explicitly opt-in to enable AirPlay. Luckily, [Ben Ward][w] and [Mathias Bynens][mb] posted a really nice bookmarklet to enable
+AirPlay for all videos on iOS devices.
+
+[bw]: http://twitter.com/#!/BenWard/status/32627491910721538
+[mb]: http://mths.be/auv
+[mor]: http://macosrumors.com/2011/01/12/first-look-mobile-safari-airplay/
+
+The bookmarklet works by modifying `video` and `embed` elements to contain the
+attributes `x-webkit-airplay="allow"` and `airplay=allow`. These attributes
+inform the iOS movie player to enable AirPlay (`MPMoviePlayerController`'s
+`allowsAirPlay` attribute is set to `true`). This should allow any embedded web
+video to play over AirPlay. However, it turns out modifying the attributes after
+loading the page does not cause the movie player to enable AirPlay.
+
+Experimenting and modifying the bookmarklet I found how to enable AirPlay for
+all videos. AirPlay is enabled If we load a new page with the modified `video`
+and `embed` elements from the original. My assumption is movie player
+initializes the video elements when the page loads rather than inspecting the
+element on tapping (or clicking) thus AirPlay is disabled.  The new bookmarklet
+is below and has been tested on [HTML5Video][h5], [Akamai iPhone Showcase][a],
+and [Veetle][v].
+
+[h5]: http://www.html5video.org
+[a]: http://iphone.akamai.com
+[v]: http://www.veetle.com
+
+<a href="javascript:[].slice.call(document.querySelectorAll('embed,video'),0).map(function(e){e.setAttribute('x-webkit-airplay','allow');e.setAttribute('airplay','allow')});var w = window.open('about:blank');var d = w.document;d.open();d.write(document.documentElement.innerHTML);d.close();">This
+link contains the bookmarklet</a>. Copy the link and place it in a new bookmark
+in Mobile Safari. When you visit a web page with embedded video, load the
+bookmark and a new window will open with the same content but AirPlay will be
+enabled.
+
+Or in human readable form:
+
+    javascript:[].slice.call(
+      document.querySelectorAll('embed,video'),0).map(
+        function(e) {
+          e.setAttribute('x-webkit-airplay','allow');
+          e.setAttribute('airplay','allow')
+        });
+    var w = window.open('about:blank');
+    var d = w.document;
+    d.open();
+    d.write(document.documentElement.innerHTML);
+    d.close();
+
+There is probably a nicer way to do this but I am not that familiar with DOM in
+JavaScript. Get in touch if you know of a cleaner method.
+
+{% endblock %}
