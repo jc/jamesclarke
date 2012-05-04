@@ -153,7 +153,7 @@ h4 {
 .post p a, .post li a { font-weight:normal; background-color: #f1ffca; border: none; }
 
 .post {
-    padding: 6px 0 12px 0;
+    padding: 0 0 12px 0;
     text-align:left;
     width:640px;
 }
@@ -189,6 +189,10 @@ p.byline {
 .alert {color: red;}
 
 .commentsep {text-align: center; font-weight:bold;}
+
+.links { text-align: center; }
+.links p a { font-weight:normal; background-color: #f1ffca; border: none;}
+
 
 #arc th,#arc td{list-style:none;margin:0;padding:0}
 #arc{width:100%}
