@@ -1,0 +1,8 @@
+{
+    "name": "jamesclarke",
+    "type": "static",
+    "alias": ["www.jamesclarke.net"],
+    "static": {
+        "directoryListing": false
+    }
+}
