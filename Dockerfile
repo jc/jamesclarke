@@ -6,6 +6,4 @@ RUN unzip jc.zip
 WORKDIR /usr/src/hyde-jc
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . /usr/src/jamesclarke
-
-RUN python hyde.py -g -s /usr/src/jamesclarke -d /public
+CMD python hyde.py -g -s /usr/src/jamesclarke -d /public && python /usr/src/jamesclarke/gen-now-json.py /public /usr/src/jamesclarke
